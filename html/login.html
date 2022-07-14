@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>VS Code Server</title>
+</head>
+
+<body style="text-align:center;">
+	<form onsubmit="login(); return false;">
+		<p><h2>VS Code Server</h2></p>
+		<p><input id="password" name="password" type="password" autofocus></p>
+		<p><button type="submit">Log In</button></p>
+	</form>
+</body>
+
+<script type="text/javascript">
+	function login() {
+		var tkn = document.getElementById('password').value;
+		document.cookie = ('vscode-tkn=' + tkn + '; expires=Sun, 1 Jan 2023 00:00:00 UTC; path=/');
+		location.reload();
+	}
+</script>
+
+</html>
