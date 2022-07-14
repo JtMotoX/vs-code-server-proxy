@@ -4,7 +4,7 @@ services:
   nginx:
     image: nginx:1.23
     container_name: vs-code-server-proxy
-    # restart: always
+    restart: always
     ports:
       - '4445:4445'
     volumes:
