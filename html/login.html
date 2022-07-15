@@ -16,7 +16,8 @@
 <script type="text/javascript">
 	function login() {
 		var tkn = document.getElementById('password').value;
-		document.cookie = ('vscode-tkn=' + tkn + '; expires=Sun, 1 Jan 2023 00:00:00 UTC; path=/');
+		var expires = new Date(Date.now() + (1000*60*60*24*1)); // 1 DAY
+		document.cookie = ('vscode-tkn=' + tkn + '; expires=' + expires + '; path=/'); // THE EXPIRES DOESN'T MATTER SINCE VS CODE SERVER CHANGES IT TO 7 DAYS
 		location.reload();
 	}
 </script>
