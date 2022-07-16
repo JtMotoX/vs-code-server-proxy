@@ -16,7 +16,7 @@ fi
 . ./.env
 
 # GET THE OS TYPE
-if [ "$(grep -Ei 'debian|buntu|mint' /etc/*release)" ]; then
+if [ "$(grep -Ei 'debian|buntu|mint' /etc/*release >/dev/null 2>&1)" ]; then
 	OS_TYPE="debian"
 elif echo "$OSTYPE" | grep 'darwin' >/dev/null 2>&1; then
 	OS_TYPE="macos"
