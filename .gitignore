@@ -1,4 +1,5 @@
+/.env
 /cert/*
-/.connection-token
+/tmp/*
 
 !/**/.gitkeep

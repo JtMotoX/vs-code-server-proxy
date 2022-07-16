@@ -14,3 +14,6 @@ This is a reverse proxy for [Visual Studio Code Server](https://code.visualstudi
 1. Make a symbolic link: `ln -s $(pwd)/run.sh /usr/local/bin/vs-code-server`
 1. Install the service: `./service-macos.sh install`
 1. Run the service: `./service-macos.sh start`
+
+## TODO
+1. Support Debian host

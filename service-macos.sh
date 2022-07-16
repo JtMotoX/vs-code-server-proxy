@@ -8,7 +8,7 @@ SERVICE="com.jonathaf.vs-code-server"
 
 SERVICE_FILE="${HOME}/Library/LaunchAgents/${SERVICE}.plist"
 
-function get_state() {
+get_state() {
 	if [ ! -f "${SERVICE_FILE}" ]; then
 		CURRENT_STATE=-1
 	else
@@ -16,7 +16,7 @@ function get_state() {
 	fi
 }
 
-function get_status() {
+get_status() {
 	get_state
 	if [ ${CURRENT_STATE} -eq -1 ]; then
 		echo "Service not installed"
@@ -27,7 +27,7 @@ function get_status() {
 	fi
 }
 
-function install_service() {
+install_service() {
 	cp ./${SERVICE}.plist ${SERVICE_FILE}
 	if [ $? -ne 0 ]; then
 		echo "Error installing service"
@@ -37,7 +37,7 @@ function install_service() {
 	echo "Successfully Installed Service"
 }
 
-function uninstall_service() {
+uninstall_service() {
 	stop_service
 	if [ ! -f "${SERVICE_FILE}" ]; then
 		echo "Service not installed"
@@ -48,7 +48,7 @@ function uninstall_service() {
 	fi
 }
 
-function start_service() {
+start_service() {
 	get_state
 	if [[ $CURRENT_STATE -eq 0 ]]; then echo "Already running"; return; fi
 	echo "Starting service . . ."
@@ -59,7 +59,7 @@ function start_service() {
 	get_status
 }
 
-function stop_service() {
+stop_service() {
 	get_state
 	launchctl unload ${SERVICE_FILE} >/dev/null 2>&1 || true
 	if [[ $CURRENT_STATE -ne 0 ]]; then echo "Not running"; return; fi
