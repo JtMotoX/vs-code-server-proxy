@@ -16,4 +16,8 @@ This is a reverse proxy for [Visual Studio Code Server](https://code.visualstudi
 1. Run the service: `./service-macos.sh start`
 
 ## TODO
-1. Support Debian host
+1. Support additional hosts
+	1. ~~macOS~~ (done)
+	1. Debian
+	1. Red Hat / CentOS / Alma / Rocky
+	1. Windows (not likely)
