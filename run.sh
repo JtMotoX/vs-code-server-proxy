@@ -16,23 +16,25 @@ fi
 . ./.env
 
 # GET THE OS TYPE
-if [ "$(grep -Ei 'debian|buntu|mint' /etc/*release >/dev/null 2>&1)" ]; then
-	OS_TYPE="debian"
+if echo "$OSTYPE" | grep 'linux' >/dev/null 2>&1; then
+	OS_TYPE="linux"
 elif echo "$OSTYPE" | grep 'darwin' >/dev/null 2>&1; then
 	OS_TYPE="macos"
 fi
 
-if [ "${OS_TYPE}" != "macos" ]; then
-	echo "Only the following are supported at this time:"
-	echo " - macOS"
+# MAKE SURE THE OS WAS DETECTED
+if [ "${OS_TYPE}" = "" ]; then
+	echo "Unsupported OS: $OSTYPE"
 	exit 1
 fi
 
-if [ "${OS_TYPE}" = "debian" ]; then
+
+if [ "${OS_TYPE}" = "linux" ]; then
 	# MAKE SURE KEYRING IS INSTALLED
-	if ! dpkg -s gnome-keyring >/dev/null 2>&1; then
-		echo "Please install gnome-keyring:"
-		echo "> apt update && apt install -y gnome-keyring"
+	if ! command -v gnome-keyring-daemon >/dev/null; then
+		echo "Please install gnome-keyring"
+		command -v yum >/dev/null && echo "> yum install gnome-keyring"
+		command -v apt >/dev/null && echo "> apt update && apt install -y gnome-keyring"
 		exit 1
 	fi
 	# MAKE SURE KEYRING PASSWORD IS SET
@@ -76,11 +78,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # CHECK IF THE SERVICE IS INSTALLED
-if [ "${OS_TYPE}" = "macos" ]; then
-	SERVICE_STATUS="$(./service-macos.sh status)"
-elif [ "${OS_TYPE}" = "debian" ]; then
-	SERVICE_STATUS="not installed"
-fi
+SERVICE_STATUS="$(./services/service-${OS_TYPE}.sh status)"
 if [ $? -ne 0 ]; then
 	echo "Error getting service status"
 	exit 1
@@ -88,7 +86,7 @@ fi
 
 if [ -t 1 ] && ! echo "${SERVICE_STATUS}" | grep "not installed" >/dev/null 2>&1; then
 	# IF INTERACTIVE SHELL, RUN THE SERVICE IF INSTALLED
-	./service-macos.sh restart
+	./services/service-${OS_TYPE}.sh restart
 else
 	# RUN THE PROCESS
 	while true; do
@@ -96,8 +94,8 @@ else
 		[ "${VS_CODE_HTTP_PORT}" != "" ] && COMMAND="${COMMAND} --port ${VS_CODE_HTTP_PORT}"
 		[ "${VS_CODE_LOGLEVEL}" != "" ] && COMMAND="${COMMAND} --verbose --log ${VS_CODE_LOGLEVEL}"
 		echo "${COMMAND}"
-		if [ "${OS_TYPE}" = "debian" ]; then
-			dbus-run-session -- sh -c "(echo "${KEYRING_PASS}" | gnome-keyring-daemon --unlock) && ${COMMAND} --host 0.0.0.0" || true
+		if [ "${OS_TYPE}" = "linux" ]; then
+			dbus-run-session -- sh -c "(echo '${KEYRING_PASS}' | gnome-keyring-daemon --unlock) && ${COMMAND} --host 0.0.0.0" || true
 		else
 			${COMMAND} || true
 		fi
