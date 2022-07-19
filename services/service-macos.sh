@@ -28,7 +28,7 @@ get_status() {
 }
 
 install_service() {
-	cp ./${SERVICE}.plist ${SERVICE_FILE}
+	cp ./vs-code-server.plist ${SERVICE_FILE}
 	if [ $? -ne 0 ]; then
 		echo "Error installing service"
 		exit 1
@@ -96,7 +96,7 @@ case $SET_STATE in
 		;;
 
 	*)
-		echo "You must pass in a set state (start, stop, restart)"
+		echo "You must pass in a set state (install, uninstall, status, start, stop, restart)"
 		exit 1
 		;;
 esac

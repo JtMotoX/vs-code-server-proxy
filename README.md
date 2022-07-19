@@ -12,8 +12,8 @@ This is a reverse proxy for [Visual Studio Code Server](https://code.visualstudi
 ## Install background service to launch at boot (macOS)
 1. Open `Settings > Security & Privacy > Full Disk Acces` and add `/bin/sh`
 1. Make a symbolic link: `ln -s $(pwd)/run.sh /usr/local/bin/vs-code-server`
-1. Install the service: `./service-macos.sh install`
-1. Run the service: `./service-macos.sh start`
+1. Install the service: `./services/service-macos.sh install`
+1. Run the service: `./services/service-macos.sh start`
 
 ## TODO
 1. Support additional hosts
