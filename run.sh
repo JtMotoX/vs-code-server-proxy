@@ -51,7 +51,7 @@ if [ "${VS_CODE_PASSWORD}" = "" ]; then
 fi
 
 # CREATE THE CONNECTION TOKEN FILE
-mkdir ./tmp
+mkdir ./tmp 2>/dev/null || true
 echo "${VS_CODE_PASSWORD}" > ./tmp/.connection-token
 
 # SET THE PATH OF THE code-server BINARY
