@@ -92,7 +92,7 @@ else
 		[ "${VS_CODE_LOGLEVEL}" != "" ] && COMMAND="${COMMAND} --verbose --log ${VS_CODE_LOGLEVEL}"
 		echo "${COMMAND}" | sed "s/${VS_CODE_PASSWORD}/***/"
 		if [ "${OS_TYPE}" = "linux" ]; then
-			dbus-run-session -- sh -c "(echo '${KEYRING_PASS}' | gnome-keyring-daemon --unlock) && ${COMMAND} --host 127.0.0.1" || true
+			dbus-run-session -- sh -c "(echo '${KEYRING_PASS}' | gnome-keyring-daemon --unlock) && ${COMMAND} --host 0.0.0.0" || true
 		else
 			${COMMAND} || true
 		fi
