@@ -18,6 +18,5 @@ services:
     command: |
       -c "
         envsubst '$${VS_CODE_HTTPS_PORT}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
-        cat /etc/nginx/nginx.conf
         /docker-entrypoint.sh nginx -g 'daemon off;'
       "
