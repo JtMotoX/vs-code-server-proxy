@@ -50,10 +50,6 @@ if [ "${VS_CODE_PASSWORD}" = "" ]; then
 	exit 1
 fi
 
-# CREATE THE CONNECTION TOKEN FILE
-mkdir ./tmp 2>/dev/null || true
-echo "${VS_CODE_PASSWORD}" > ./tmp/.connection-token
-
 # SET THE PATH OF THE code-server BINARY
 PATH="/usr/local/bin:${PATH}"
 
@@ -91,12 +87,12 @@ if [ -t 1 ] && ! echo "${SERVICE_STATUS}" | grep "not installed" >/dev/null 2>&1
 else
 	# RUN THE PROCESS
 	while true; do
-		COMMAND="code-server serve-local --connection-token-file $(pwd)/tmp/.connection-token --accept-server-license-terms --disable-telemetry"
+		COMMAND="code-server serve-local --connection-token "${VS_CODE_PASSWORD}" --accept-server-license-terms --disable-telemetry"
 		[ "${VS_CODE_HTTP_PORT}" != "" ] && COMMAND="${COMMAND} --port ${VS_CODE_HTTP_PORT}"
 		[ "${VS_CODE_LOGLEVEL}" != "" ] && COMMAND="${COMMAND} --verbose --log ${VS_CODE_LOGLEVEL}"
-		echo "${COMMAND}"
+		echo "${COMMAND}" | sed "s/${VS_CODE_PASSWORD}/***/"
 		if [ "${OS_TYPE}" = "linux" ]; then
-			dbus-run-session -- sh -c "(echo '${KEYRING_PASS}' | gnome-keyring-daemon --unlock) && ${COMMAND} --host 0.0.0.0" || true
+			dbus-run-session -- sh -c "(echo '${KEYRING_PASS}' | gnome-keyring-daemon --unlock) && ${COMMAND} --host 127.0.0.1" || true
 		else
 			${COMMAND} || true
 		fi

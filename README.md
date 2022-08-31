@@ -5,9 +5,9 @@ This is a reverse proxy for [Visual Studio Code Server](https://code.visualstudi
 ## Run
 1. Install Docker
 1. Generate an SSL cert and place in the [cert](cert) directory as `server.crt` and `server.key`
-1. Create a file called [.connection-token](.connection-token) and save your password in that file
+1. Copy the [.env-sample](./.env-sample) to [.env](./.env) and make desired changes
 1. Execute `./run.sh`
-1. Navigate to `https://{your-ip}:4443` (*the port can be set in the [docker-compose.yml](docker-compose.yml) and [nginx.conf](nginx.conf) files*)
+1. Navigate to `https://{your-ip}:4443`
 
 ## Install background service to launch at boot (macOS)
 1. Execute the `./run.sh` script first to make sure everything is working (see [Run](#run) section).
