@@ -16,7 +16,9 @@ fi
 . ./.env
 
 # GET THE OS TYPE
-if echo "$OSTYPE" | grep 'linux' >/dev/null 2>&1; then
+if uname | grep -i 'linux' >/dev/null 2>&1; then
+	OS_TYPE="linux"
+elif echo "$OSTYPE" | grep 'linux' >/dev/null 2>&1; then
 	OS_TYPE="linux"
 elif echo "$OSTYPE" | grep 'darwin' >/dev/null 2>&1; then
 	OS_TYPE="macos"
