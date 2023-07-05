@@ -46,6 +46,12 @@ if [ "${OS_TYPE}" = "linux" ]; then
 	fi
 fi
 
+if ! command -v code-server >/dev/null; then
+	echo "You need to install code-server"
+	echo "https://code.visualstudio.com/blogs/2022/07/07/vscode-server"
+	exit 1
+fi	
+
 # MAKE SURE THE PASSWORD IS SET
 if [ "${VS_CODE_PASSWORD}" = "" ]; then
 	echo "Please set the 'VS_CODE_PASSWORD' in the .env file"
