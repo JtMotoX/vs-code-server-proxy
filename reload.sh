@@ -1,6 +1,6 @@
 #!/bin/sh
 
-docker-compose exec nginx bash -c "nginx -T >/dev/null && /etc/init.d/nginx reload"
+docker-compose exec nginx sh -c "nginx -T >/dev/null && nginx -s reload"
 if [ "$?" != "0" ]; then
 	echo "ERROR reloading"
 	exit 1
