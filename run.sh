@@ -15,6 +15,15 @@ fi
 # SOURCE THE .env VARIABLES
 . ./.env
 
+if [ "${VS_CODE_INSIDERS}" = "true" ]; then
+	CODE_CLI="code-insiders"
+	CODE_BUILD="insiders"
+	echo "WARNING: Using ${CODE_CLI} since you have set VS_CODE_INSIDERS"
+else
+	CODE_CLI="code"
+	CODE_BUILD="stable"
+fi
+
 # GET THE OS TYPE
 if uname | grep -i 'linux' >/dev/null 2>&1; then
 	OS_TYPE="linux"
@@ -31,7 +40,7 @@ if [ "${OS_TYPE}" = "" ]; then
 fi
 
 
-if [ "${OS_TYPE}" = "linux" ]; then
+if [ "${OS_TYPE}" = "linux-disabled" ]; then
 	# MAKE SURE KEYRING IS INSTALLED
 	if ! command -v gnome-keyring-daemon >/dev/null; then
 		echo "Please install gnome-keyring"
@@ -46,11 +55,12 @@ if [ "${OS_TYPE}" = "linux" ]; then
 	fi
 fi
 
-if ! command -v code-server >/dev/null; then
-	echo "You need to install code-server"
-	echo "https://code.visualstudio.com/blogs/2022/07/07/vscode-server"
+if ! command -v ${CODE_CLI} >/dev/null; then
+	echo "command not found: ${CODE_CLI}"
+	echo "You need to install Visual Studio Code cli"
+	echo "https://code.visualstudio.com/sha/download?build=${CODE_BUILD}&os=cli-alpine-x64"
 	exit 1
-fi	
+fi
 
 # MAKE SURE THE PASSWORD IS SET
 if [ "${VS_CODE_PASSWORD}" = "" ]; then
@@ -58,7 +68,7 @@ if [ "${VS_CODE_PASSWORD}" = "" ]; then
 	exit 1
 fi
 
-# SET THE PATH OF THE code-server BINARY
+# SET THE PATH OF THE code BINARY
 PATH="/usr/local/bin:${PATH}"
 
 # MAKE SURE THE CERT FILES EXIST
@@ -95,11 +105,11 @@ if [ -t 1 ] && ! echo "${SERVICE_STATUS}" | grep "not installed" >/dev/null 2>&1
 else
 	# RUN THE PROCESS
 	while true; do
-		COMMAND="code-server serve-local --connection-token "${VS_CODE_PASSWORD}" --accept-server-license-terms --disable-telemetry"
+		COMMAND="${CODE_CLI} serve-web --connection-token "${VS_CODE_PASSWORD}" --accept-server-license-terms --disable-telemetry"
 		[ "${VS_CODE_HTTP_PORT}" != "" ] && COMMAND="${COMMAND} --port ${VS_CODE_HTTP_PORT}"
 		[ "${VS_CODE_LOGLEVEL}" != "" ] && COMMAND="${COMMAND} --verbose --log ${VS_CODE_LOGLEVEL}"
 		echo "${COMMAND}" | sed "s/${VS_CODE_PASSWORD}/***/"
-		if [ "${OS_TYPE}" = "linux" ]; then
+		if [ "${OS_TYPE}" = "linux-disabled" ]; then
 			dbus-run-session -- sh -c "(echo '${KEYRING_PASS}' | gnome-keyring-daemon --unlock) && ${COMMAND} --host 0.0.0.0" || true
 		else
 			${COMMAND} || true
