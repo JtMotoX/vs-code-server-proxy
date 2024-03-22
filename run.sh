@@ -104,10 +104,13 @@ if [ -t 1 ] && ! echo "${SERVICE_STATUS}" | grep "not installed" >/dev/null 2>&1
 	./services/service-${OS_TYPE}.sh restart
 else
 	# RUN THE PROCESS
+	if netstat -tuln | grep ${VS_CODE_HTTP_PORT} >/dev/null 2>&1; then
+		echo "Port ${VS_CODE_HTTP_PORT} is already in use"
+		echo "You can change the port by setting VS_CODE_HTTP_PORT in the .env file if needed"
+		exit 1
+	fi
 	while true; do
-		COMMAND="${CODE_CLI} serve-web --connection-token "${VS_CODE_PASSWORD}" --accept-server-license-terms --disable-telemetry"
-		[ "${VS_CODE_HTTP_PORT}" != "" ] && COMMAND="${COMMAND} --port ${VS_CODE_HTTP_PORT}"
-		[ "${VS_CODE_LOGLEVEL}" != "" ] && COMMAND="${COMMAND} --verbose --log ${VS_CODE_LOGLEVEL}"
+		COMMAND="${CODE_CLI} serve-web --connection-token "${VS_CODE_PASSWORD}" --accept-server-license-terms --disable-telemetry --port ${VS_CODE_HTTP_PORT:-8000} --verbose --log ${VS_CODE_LOGLEVEL:-debug}"
 		echo "${COMMAND}" | sed "s/${VS_CODE_PASSWORD}/***/"
 		if [ "${OS_TYPE}" = "linux-disabled" ]; then
 			dbus-run-session -- sh -c "(echo '${KEYRING_PASS}' | gnome-keyring-daemon --unlock) && ${COMMAND} --host 0.0.0.0" || true
