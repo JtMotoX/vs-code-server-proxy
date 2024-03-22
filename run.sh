@@ -72,8 +72,8 @@ fi
 PATH="/usr/local/bin:${PATH}"
 
 # MAKE SURE THE CERT FILES EXIST
-if [ ! -f "./cert/server.crt" ] || [ ! -f "./cert/server.key" ]; then
-	echo "You seem to be missing cert files. Please review the README.md."
+if [ ! -f "./auth/htpasswd" ]; then
+	echo "You seem to be missing an htpasswd file. Please review the README.md."
 	exit 1
 fi
 

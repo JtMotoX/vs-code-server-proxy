@@ -1,4 +1,4 @@
 /.env
-/cert/*
+/auth/*
 
 !/**/.gitkeep
