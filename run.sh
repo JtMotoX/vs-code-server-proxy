@@ -58,7 +58,7 @@ fi
 if ! command -v ${CODE_CLI} >/dev/null; then
 	echo "command not found: ${CODE_CLI}"
 	echo "You need to install Visual Studio Code cli"
-	echo "https://code.visualstudio.com/sha/download?build=${CODE_BUILD}&os=cli-alpine-x64"
+	echo "curl -L 'https://code.visualstudio.com/sha/download?build=${CODE_BUILD}&os=cli-alpine-x64' | sudo tar -xz -C /usr/bin/ code"
 	exit 1
 fi
 
