@@ -122,7 +122,7 @@ else
 		if [ "${OS_TYPE}" = "linux-disabled" ]; then
 			dbus-run-session -- sh -c "(echo '${KEYRING_PASS}' | gnome-keyring-daemon --unlock) && ${COMMAND} --host 0.0.0.0" || true
 		else
-			${COMMAND} || true
+			${SHELL} -l -c "${COMMAND}" || true
 		fi
 	done
 fi

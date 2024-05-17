@@ -2,7 +2,7 @@
 Description=VS Code Server
 
 [Service]
-ExecStart=/bin/bash RUN_SCRIPT
+ExecStart=RUN_SHELL RUN_SCRIPT
 User=USER_NAME
 
 [Install]

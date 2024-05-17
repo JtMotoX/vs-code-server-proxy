@@ -31,6 +31,7 @@ install_service() {
 	RUN_FILE="$(cd $(pwd)/../ && pwd)/run.sh"
 	test -f "${RUN_FILE}" || { echo "ERROR: File not found: ${RUN_FILE}"; exit 1; }
 	sudo cp ./vs-code-server.service "${SERVICE_FILE}"
+	sudo sed -i "s|RUN_SHELL|${SHELL}|" "${SERVICE_FILE}"
 	sudo sed -i "s|RUN_SCRIPT|${RUN_FILE}|" "${SERVICE_FILE}"
 	sudo sed -i "s|USER_NAME|$(whoami)|" "${SERVICE_FILE}"
 	sudo systemctl daemon-reload
