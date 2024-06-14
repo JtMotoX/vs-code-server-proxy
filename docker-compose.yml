@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: nginx:1.25-alpine
+    image: nginx:alpine
     container_name: vs-code-server-proxy
     restart: always
     env_file: .env
