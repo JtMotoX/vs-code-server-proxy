@@ -4,11 +4,11 @@ This is a reverse proxy for [Visual Studio Code Server](https://code.visualstudi
 
 ## Run
 1. Install Docker
-1. Generate an SSL cert and place in the [cert](cert) directory as `server.crt` and `server.key`
-   1. Example: `openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 10000 -nodes`
-1. Copy the [.env-sample](./.env-sample) to [.env](./.env) and make desired changes
-1. Execute `./run.sh`
-1. Navigate to `https://{your-ip}:4443`
+2. Copy the [.env-sample](./.env-sample) to [.env](./.env) and make desired changes
+3. Execute `./generate-certs.sh`
+4. Install the [windows-trusted-ca.crt](./cert/windows-trusted-ca.crt) in your Windows 'Local Machine'
+5. Execute `./run.sh`
+6. Navigate to `https://{your-ip}:4443`
 
 ## Install background service to launch at boot (macOS)
 1. Execute the `./run.sh` script first to make sure everything is working (see [Run](#run) section).
