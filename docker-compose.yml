@@ -4,11 +4,12 @@ services:
     container_name: vs-code-server-proxy
     restart: always
     env_file: .env
-    environment:
-      VS_CODE_HTTP_PORT: ${VS_CODE_HTTP_PORT:-8000}
-      VS_CODE_HTTPS_PORT: ${VS_CODE_HTTPS_PORT:-443}
     volumes:
-      - ./nginx.conf:/etc/nginx/templates/default.conf.template:ro
-      - ./cert:/cert:ro
-      - ./html:/usr/share/nginx/html
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ./nginx/login.html:/usr/share/nginx/html/login.html:ro
+      - ./nginx/entrypoint.sh:/entrypoint.sh:ro
+      - ./cert:/etc/nginx/cert:ro
     network_mode: "host" # WE HAVE TO USE THIS BECAUSE WE NEED TO RESTRICT VSC SERVER ACCESS TO LOCALHOST ONLY, BUT THEN WE NEED NETWORK_MODE HOST TO ALLOW NGINX TO ACCESS IT ON LOCALHOST
+    entrypoint: ["/entrypoint.sh"]
+    command: ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="icon" type="image/png" href="https://code.visualstudio.com/assets/branding/code-stable.png">
+    <script>
+        // Set theme immediately to prevent flash
+        (function() {
+            const stored = localStorage.getItem('theme');
+            const theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <style>
+        :root {
+            --bg-color: #f5f5f5;
+            --card-bg: white;
+            --text-color: #333;
+            --label-color: #666;
+            --border-color: #ddd;
+            --border-focus: #007acc;
+            --button-bg: #007acc;
+            --button-hover: #005a9e;
+            --error-bg: #ffebee;
+            --error-color: #c62828;
+            --theme-toggle-bg: #e0e0e0;
+            --theme-toggle-color: #666;
+        }
+        
+        [data-theme="dark"] {
+            --bg-color: #1e1e1e;
+            --card-bg: #252526;
+            --text-color: #cccccc;
+            --label-color: #969696;
+            --border-color: #3e3e42;
+            --border-focus: #0e639c;
+            --button-bg: #0e639c;
+            --button-hover: #1177bb;
+            --error-bg: #5a1d1d;
+            --error-color: #f48771;
+            --theme-toggle-bg: #3e3e42;
+            --theme-toggle-color: #cccccc;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 3rem;
+            height: 1.5rem;
+            background: var(--border-color);
+            border: none;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            padding: 0;
+        }
+        
+        .theme-toggle::before {
+            content: '☀';
+            position: absolute;
+            right: 0.3rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75rem;
+            color: var(--text-color);
+            z-index: 1;
+            transition: opacity 0.3s;
+        }
+        
+        [data-theme="dark"] .theme-toggle::before {
+            content: '☾';
+            left: 0.3rem;
+            right: auto;
+        }
+        
+        .theme-toggle::after {
+            content: '';
+            position: absolute;
+            top: 0.25rem;
+            left: 0.25rem;
+            width: 1rem;
+            height: 1rem;
+            background: var(--card-bg);
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+        
+        [data-theme="dark"] .theme-toggle::after {
+            transform: translateX(1.5rem);
+        }
+        
+        .auth-container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            transition: background-color 0.3s;
+        }
+        .vscode-icon {
+            width: 4rem;
+            height: 4rem;
+            margin: 0 auto 1rem;
+            display: block;
+        }
+        h1 {
+            margin: 0 0 1.5rem 0;
+            font-size: 1.5rem;
+            color: var(--text-color);
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--label-color);
+            font-size: 0.9rem;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            background: var(--card-bg);
+            color: var(--text-color);
+            transition: border-color 0.2s, background-color 0.3s, color 0.3s;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--border-focus);
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button[type="submit"]:hover {
+            background: var(--button-hover);
+        }
+        .error {
+            background: var(--error-bg);
+            color: var(--error-color);
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>
+    <div class="auth-container">
+        <img src="https://code.visualstudio.com/assets/branding/code-stable.png" alt="VS Code" class="vscode-icon">
+        <div id="error" class="error" style="display:none;">
+            Invalid credentials. Please try again.
+        </div>
+        <form id="authForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Sign In</button>
+        </form>
+    </div>
+    <script>
+        // Theme management
+        function getPreferredTheme() {
+            const stored = localStorage.getItem('theme');
+            if (stored) return stored;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        }
+        
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        }
+        
+        // Initialize theme
+        setTheme(getPreferredTheme());
+        
+        // Form handling
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect') || '/';
+        const error = urlParams.get('error');
+        
+        if (error) {
+            document.getElementById('error').style.display = 'block';
+        }
+        
+        document.getElementById('authForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            window.location.href = '/auth?username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password) + '&redirect=' + redirect;
+        });
+    </script>
+</body>
+</html>

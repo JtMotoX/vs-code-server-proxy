@@ -62,12 +62,6 @@ if ! command -v ${CODE_CLI} >/dev/null; then
 	exit 1
 fi
 
-# MAKE SURE THE PASSWORD IS SET
-if [ "${VS_CODE_PASSWORD}" = "" ]; then
-	echo "Please set the 'VS_CODE_PASSWORD' in the .env file"
-	exit 1
-fi
-
 # SET THE PATH OF THE code BINARY
 PATH="/usr/local/bin:${PATH}"
 
@@ -117,8 +111,8 @@ else
 		exit 1
 	fi
 	while true; do
-		COMMAND="${CODE_CLI} serve-web --connection-token "${VS_CODE_PASSWORD}" --accept-server-license-terms --disable-telemetry --port ${VS_CODE_HTTP_PORT:-8000} --verbose --log ${VS_CODE_LOGLEVEL:-debug}"
-		echo "${COMMAND}" | sed "s/${VS_CODE_PASSWORD}/***/"
+		COMMAND="${CODE_CLI} serve-web --without-connection-token --accept-server-license-terms --disable-telemetry --port ${VS_CODE_HTTP_PORT:-8000} --verbose --log ${VS_CODE_LOGLEVEL:-debug}"
+		echo "${COMMAND}"
 		if [ "${OS_TYPE}" = "linux-disabled" ]; then
 			dbus-run-session -- sh -c "(echo '${KEYRING_PASS}' | gnome-keyring-daemon --unlock) && ${COMMAND} --host 0.0.0.0" || true
 		else
